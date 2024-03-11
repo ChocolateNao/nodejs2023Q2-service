@@ -20,8 +20,9 @@ export class UserService {
     id: string,
     isPasswordHidden = false,
   ): User | UserResponse {
-    const user = this.database.getUserById(id);
     if (!validate(id)) throw new BadRequestException('Invalid userId');
+
+    const user = this.database.getUserById(id);
     if (!user) throw new NotFoundException('User not found');
 
     if (isPasswordHidden) {
