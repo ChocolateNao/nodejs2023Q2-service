@@ -33,14 +33,10 @@ export class TrackService {
     const track = this.findOne(id);
     const updatedTrack = {
       ...track,
-      name: updateTrackDto.name ? updateTrackDto.name : track.name,
-      duration: updateTrackDto.duration
-        ? updateTrackDto.duration
-        : track.duration,
-      artistId: updateTrackDto.artistId
-        ? updateTrackDto.artistId
-        : track.artistId,
-      albumId: updateTrackDto.albumId ? updateTrackDto.albumId : track.albumId,
+      name: updateTrackDto.name,
+      duration: updateTrackDto.duration,
+      artistId: updateTrackDto.artistId,
+      albumId: updateTrackDto.albumId,
     };
     this.database.getTracks().map((track) => {
       return track.id === id ? updatedTrack : track;

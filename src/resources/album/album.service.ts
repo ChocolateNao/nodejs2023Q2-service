@@ -34,11 +34,9 @@ export class AlbumService {
 
     const updatedAlbum = {
       ...album,
-      name: updateAlbumDto.name ? updateAlbumDto.name : album.name,
-      year: updateAlbumDto.year ? updateAlbumDto.year : album.year,
-      artistId: updateAlbumDto.artistId
-        ? updateAlbumDto.artistId
-        : album.artistId,
+      name: updateAlbumDto.name,
+      year: updateAlbumDto.year,
+      artistId: updateAlbumDto.artistId,
     };
     this.findAll().map((album) => {
       return album.id === id ? updatedAlbum : album;
