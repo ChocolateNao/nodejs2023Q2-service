@@ -21,10 +21,10 @@ components:
         version:
           type: number
           example: 1
-        createAt:
+        createdAt:
           type: number
           example: 1655000000
-        updateAt:
+        updatedAt:
           type: number
           example: 1655000000
       required:
@@ -143,7 +143,7 @@ paths:
                 - login
       responses:
         200:
-          description: Successful login.
+          description: Successful login
           content:
             application/json:
               schema:
@@ -230,13 +230,13 @@ paths:
                 - password
       responses:
         201:
-          description: The user has been created.
+          description: The user has been created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         400:
-          description: Bad request. body does not contain required fields
+          description: Bad request. Request body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /users/{userId}:
@@ -289,7 +289,7 @@ paths:
                 - newPassword
       responses:
         200:
-          description: The user has been updated.
+          description: The user has been updated
           content:
             application/json:
               schema:
@@ -305,10 +305,10 @@ paths:
                   version:
                     type: integer
                     example: 2
-                  createAt:
+                  createdAt:
                     type: integer
                     example: 1655000000
-                  updateAt:
+                  updatedAt:
                     type: integer
                     example: 1655999999
         400:
@@ -324,7 +324,7 @@ paths:
       tags:
         - Users
       summary: Delete user
-      description: Deletes user by ID.
+      description: Deletes user by ID
       responses:
         204:
           description: The user has been deleted
@@ -385,7 +385,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Track'
         400:
-          description: Bad request. body does not contain required fields
+          description: Bad request. Request body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /tracks/{id}:
@@ -413,7 +413,7 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Track was not found.
+          description: Track was not found
     put:
       tags:
         - Track
@@ -447,7 +447,7 @@ paths:
                 - duration
       responses:
         200:
-          description: The track has been updated.
+          description: The track has been updated
           content:
             application/json:
               schema:
@@ -477,7 +477,7 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Track was not found.
+          description: Track was not found
     delete:
       tags:
         - Track
@@ -491,7 +491,7 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Track was not found.
+          description: Track was not found
   /albums:
     get:
       tags:
@@ -541,7 +541,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Album'
         400:
-          description: Bad request. body does not contain required fields
+          description: Bad request. Request body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /albums/{id}:
@@ -569,7 +569,7 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Album was not found.
+          description: Album was not found
     put:
       tags:
         - Album
@@ -596,7 +596,7 @@ paths:
                 - year
       responses:
         200:
-          description: The album has been updated.
+          description: The album has been updated
           content:
             application/json:
               schema:
@@ -606,7 +606,7 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Album was not found.
+          description: Album was not found
     delete:
       tags:
         - Album
@@ -620,7 +620,7 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Album was not found.
+          description: Album was not found
   /artists:
     get:
       tags:
@@ -665,7 +665,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Artist'
         400:
-          description: Bad request. body does not contain required fields
+          description: Bad request. Request body does not contain required fields
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /artists/{id}:
@@ -693,7 +693,7 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Artist was not found.
+          description: Artist was not found
     put:
       tags:
         - Artist
@@ -715,7 +715,7 @@ paths:
                 - grammy
       responses:
         200:
-          description: The artist has been updated.
+          description: The artist has been updated
           content:
             application/json:
               schema:
@@ -725,7 +725,7 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Artist was not found.
+          description: Artist was not found
     delete:
       tags:
         - Artist
@@ -739,7 +739,7 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Artist was not found.
+          description: Artist was not found
   /favs:
     get:
       tags:
@@ -772,11 +772,11 @@ paths:
         201:
           description: Added successfully
         400:
-          description: Bad. trackId is invalid (not uuid)
+          description: Bad request. trackId is invalid (not uuid)
         401:
           $ref: '#/components/responses/UnauthorizedError'
         422:
-          description: Track with id doesn't exist.
+          description: Track with id doesn't exist
     delete:
       tags:
         - Favorites
@@ -786,11 +786,11 @@ paths:
         204:
           description: Deleted successfully
         400:
-          description: Bad. trackId is invalid (not uuid)
+          description: Bad request. trackId is invalid (not uuid)
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Track was not found.
+          description: Track was not found
   /favs/album/{id}:
     parameters:
       - name: id
@@ -808,11 +808,11 @@ paths:
         201:
           description: Added successfully
         400:
-          description: Bad. albumId is invalid (not uuid)
+          description: Bad request. albumId is invalid (not uuid)
         401:
           $ref: '#/components/responses/UnauthorizedError'
         422:
-          description: Album with id doesn't exist.
+          description: Album with id doesn't exist
     delete:
       tags:
         - Favorites
@@ -822,11 +822,11 @@ paths:
         204:
           description: Deleted successfully
         400:
-          description: Bad. albumId is invalid (not uuid)
+          description: Bad request. albumId is invalid (not uuid)
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Album was not found.
+          description: Album was not found
   /favs/artist/{id}:
     parameters:
       - name: id
@@ -848,7 +848,7 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
         422:
-          description: Artist with id doesn't exist.
+          description: Artist with id doesn't exist
     delete:
       tags:
         - Favorites
@@ -862,4 +862,4 @@ paths:
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
-          description: Artist was not found.
+          description: Artist was not found
