@@ -7,6 +7,7 @@ import {
   Delete,
   Put,
   Header,
+  HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,6 +20,7 @@ export class UserController {
 
   @Post()
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)
+  @HttpCode(201)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
@@ -32,7 +34,7 @@ export class UserController {
   @Get(':id')
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+    return this.userService.findOne(id);
   }
 
   @Put(':id')
@@ -41,12 +43,13 @@ export class UserController {
     @Param('id') id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
-    return this.userService.updatePassword(+id, updatePasswordDto);
+    return this.userService.updatePassword(id, updatePasswordDto);
   }
 
   @Delete(':id')
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)
+  @HttpCode(204)
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 }
