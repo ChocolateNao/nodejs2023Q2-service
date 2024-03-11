@@ -2,7 +2,7 @@ import { CreateAlbumDto } from 'src/resources/album/dto/create-album.dto';
 import { Album } from 'src/resources/album/entities/album.entity';
 import { CreateArtistDto } from 'src/resources/artist/dto/create-artist.dto';
 import { Artist } from 'src/resources/artist/entities/artist.entity';
-import { FavResponse } from 'src/resources/favs/entities/fav-res.entity';
+import { Fav } from 'src/resources/favs/entities/fav.entity';
 import { CreateTrackDto } from 'src/resources/track/dto/create-track.dto';
 import { Track } from 'src/resources/track/entities/track.entity';
 import { CreateUserDto } from 'src/resources/user/dto/create-user.dto';
@@ -29,7 +29,7 @@ export interface IDatabase {
   getAlbumById: (id: string) => Album;
   deleteAlbum: (id: string) => void;
 
-  getFavs: () => FavResponse;
+  getFavs: () => Fav;
   addTrackToFavs: (track: Track) => void;
   removeTrackFromFavs: (id: string) => void;
 

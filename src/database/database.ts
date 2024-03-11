@@ -9,7 +9,7 @@ import { CreateAlbumDto } from 'src/resources/album/dto/create-album.dto';
 import { CreateArtistDto } from 'src/resources/artist/dto/create-artist.dto';
 import { CreateTrackDto } from 'src/resources/track/dto/create-track.dto';
 import { CreateUserDto } from 'src/resources/user/dto/create-user.dto';
-import { FavResponse } from 'src/resources/favs/entities/fav-res.entity';
+import { Fav } from 'src/resources/favs/entities/fav.entity';
 
 @Injectable()
 export class Database implements IDatabase {
@@ -17,7 +17,7 @@ export class Database implements IDatabase {
   private readonly artists: Artist[] = [];
   private readonly tracks: Track[] = [];
   private readonly albums: Album[] = [];
-  private readonly favs: FavResponse = {
+  private readonly favs: Fav = {
     artists: [],
     albums: [],
     tracks: [],
@@ -105,7 +105,7 @@ export class Database implements IDatabase {
     this.albums.splice(indexToDelete, 1);
   }
 
-  getFavs(): FavResponse {
+  getFavs(): Fav {
     return this.favs;
   }
 
