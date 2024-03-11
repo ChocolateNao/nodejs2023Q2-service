@@ -38,7 +38,6 @@ export class UserService {
 
   findAll() {
     const users = this.database.getUsers();
-    console.log(users);
     return users.map((user) => excludePassword(user));
   }
 
@@ -52,13 +51,13 @@ export class UserService {
       throw new ForbiddenException('Passwords does not match');
 
     if (userFull.password !== updatePasswordDto.newPassword) {
-      const updatedUserDto: User = {
+      const updatedUser: User = {
         ...userFull,
         password: updatePasswordDto.newPassword,
         version: ++userFull.version,
         updatedAt: Date.now(),
       };
-      return excludePassword(Object.assign(userFull, updatedUserDto));
+      return excludePassword(Object.assign(userFull, updatedUser));
     }
     return excludePassword(userFull);
   }
