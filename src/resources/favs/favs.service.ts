@@ -36,17 +36,17 @@ export class FavsService {
     const artists = this.database
       .getArtists()
       .filter((artist) =>
-        this.database.getFavs().artists.some((el) => el.id === artist.id),
+        this.database.getFavs().artists.some((id) => id === artist.id),
       );
     const albums = this.database
       .getAlbums()
       .filter((album) =>
-        this.database.getFavs().albums.some((el) => el.id === album.id),
+        this.database.getFavs().albums.some((id) => id === album.id),
       );
     const tracks = this.database
       .getTracks()
       .filter((track) =>
-        this.database.getFavs().tracks.some((el) => el.id === track.id),
+        this.database.getFavs().tracks.some((id) => id === track.id),
       );
     return { artists, albums, tracks };
   }

@@ -110,35 +110,29 @@ export class Database implements IDatabase {
   }
 
   addTrackToFavs(track: Track): void {
-    this.favs.tracks.push(track);
+    this.favs.tracks.push(track.id);
   }
 
-  removeTrackFromFavs(id: string): void {
-    const indexToDelete = this.favs.tracks.findIndex(
-      (track) => track.id === id,
-    );
+  removeTrackFromFavs(trackId: string): void {
+    const indexToDelete = this.favs.tracks.findIndex((id) => id === trackId);
     this.favs.tracks.splice(indexToDelete, 1);
   }
 
   addAlbumToFavs(album: Album): void {
-    this.favs.albums.push(album);
+    this.favs.albums.push(album.id);
   }
 
-  removeAlbumFromFavs(id: string): void {
-    const indexToDelete = this.favs.albums.findIndex(
-      (album) => album.id === id,
-    );
+  removeAlbumFromFavs(albumId: string): void {
+    const indexToDelete = this.favs.albums.findIndex((id) => id === albumId);
     this.favs.albums.splice(indexToDelete, 1);
   }
 
   addArtistToFavs(artist: Artist): void {
-    this.favs.artists.push(artist);
+    this.favs.artists.push(artist.id);
   }
 
-  removeArtistFromFavs(id: string): void {
-    const indexToDelete = this.favs.artists.findIndex(
-      (artist) => artist.id === id,
-    );
+  removeArtistFromFavs(artistId: string): void {
+    const indexToDelete = this.favs.artists.findIndex((id) => id === artistId);
     this.favs.artists.splice(indexToDelete, 1);
   }
 }
