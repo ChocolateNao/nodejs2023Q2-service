@@ -7,6 +7,7 @@ import {
   Header,
   HttpCode,
   NotFoundException,
+  HttpStatus,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { JSON_HEADER_NAME, JSON_HEADER_VALUE } from 'src/constants/jsonHeader';
@@ -18,7 +19,7 @@ export class FavsController {
 
   @Post(':entity/:id')
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   create(
     @Param('entity') entity: 'track' | 'album' | 'artist',
     @Param('id') id: string,
@@ -39,7 +40,7 @@ export class FavsController {
 
   @Delete(':entity/:id')
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(
     @Param('entity') entity: 'track' | 'album' | 'artist',
     @Param('id') id: string,

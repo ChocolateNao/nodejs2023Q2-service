@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-// import { AppController } from './app.controller';
-// import { AppService } from './app.service';
 import { UserModule } from './resources/user/user.module';
 import { AlbumModule } from './resources/album/album.module';
 import { TrackModule } from './resources/track/track.module';

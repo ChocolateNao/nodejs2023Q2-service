@@ -8,6 +8,7 @@ import {
   Put,
   Header,
   HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -19,7 +20,7 @@ export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Post()
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)
   create(@Body() createArtistDto: CreateArtistDto) {
     return this.artistService.create(createArtistDto);
@@ -44,7 +45,7 @@ export class ArtistController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)
   remove(@Param('id') id: string) {
     return this.artistService.remove(id);

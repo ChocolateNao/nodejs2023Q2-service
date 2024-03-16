@@ -8,6 +8,7 @@ import {
   Put,
   Header,
   HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,7 +21,7 @@ export class UserController {
 
   @Post()
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
@@ -48,7 +49,7 @@ export class UserController {
 
   @Delete(':id')
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }

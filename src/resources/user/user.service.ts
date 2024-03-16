@@ -41,14 +41,14 @@ export class UserService {
     return users.map((user) => excludePassword(user));
   }
 
-  findOne(id: string) {
+  findOne(id: string): UserResponse {
     return this.getUserByIdFull(id, true);
   }
 
   updatePassword(id: string, updatePasswordDto: UpdatePasswordDto) {
     const userFull = this.getUserByIdFull(id) as User;
     if (userFull.password !== updatePasswordDto.oldPassword)
-      throw new ForbiddenException('Passwords does not match');
+      throw new ForbiddenException('Passwords do not match');
 
     if (userFull.password !== updatePasswordDto.newPassword) {
       const updatedUser: User = {
@@ -63,7 +63,7 @@ export class UserService {
   }
 
   remove(id: string) {
-    const userFull = this.getUserByIdFull(id) as User;
+    const userFull = this.getUserByIdFull(id);
     return this.database.deleteUser(userFull.id);
   }
 }
