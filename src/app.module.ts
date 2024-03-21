@@ -4,7 +4,7 @@ import { AlbumModule } from './resources/album/album.module';
 import { TrackModule } from './resources/track/track.module';
 import { ArtistModule } from './resources/artist/artist.module';
 import { FavsModule } from './resources/favs/favs.module';
-import { DatabaseModule } from './database/database.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { DatabaseModule } from './database/database.module';
     ArtistModule,
     AlbumModule,
     FavsModule,
-    DatabaseModule,
+    PrismaModule,
   ],
 })
 export class AppModule {}
