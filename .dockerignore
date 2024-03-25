@@ -13,11 +13,13 @@ Dockerfile
 .eslintrc*
 .prettierrc*
 .vscode/
+.env.example
 
-# Test
+# Test & db
 test/
 coverage/
 jest.config.json
+database/
 
 # Docs
 *.md
