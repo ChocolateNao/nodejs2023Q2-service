@@ -60,7 +60,7 @@ You can pull the [image](https://hub.docker.com/r/choconao/rest-music-service) f
 docker pull choconao/rest-music-service
 ```
 
-#### Run `docker compose`
+#### Run `docker-compose.yml`
 
 To bootstrap the application with database included simply run
 
@@ -80,16 +80,18 @@ docker compose down
 docker compose down --volumes
 
 # Stop containers and delete ALL volumes AND ALL images
-docker compose down --volumes --rmi=all 
+docker compose down --volumes --rmi=all
 ```
 
-To check the size of an image
+To check the size of your images
 
 ```bash
 docker images
 ```
 
-To scan the image for vulnerabilities run the npm script
+To scan the built image for vulnerabilities run the npm script
+
+_You have to be logged in into docker with `docker login` command as this script uses `docker scout` under the hood._
 
 ```bash
 npm run scan:app
