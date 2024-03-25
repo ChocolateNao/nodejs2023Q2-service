@@ -1,4 +1,5 @@
+export const validFavEntities = ['track', 'album', 'artist'];
+
 export const isValidFavEntity = (entity: string): boolean => {
-  const validEntities = ['track', 'album', 'artist'];
-  return validEntities.includes(entity);
+  return validFavEntities.includes(entity);
 };

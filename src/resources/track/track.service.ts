@@ -5,48 +5,43 @@ import {
 } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { Database } from 'src/database/database';
 import { validate } from 'uuid';
+import { Track } from './entities/track.entity';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TrackService {
-  constructor(private database: Database) {}
+  constructor(private prisma: PrismaService) {}
 
-  create(createTrackDto: CreateTrackDto) {
-    const newTrack = this.database.createTrack(createTrackDto);
+  async create(createTrackDto: CreateTrackDto): Promise<Track> {
+    const newTrack = await this.prisma.track.create({ data: createTrackDto });
     return newTrack;
   }
 
-  findAll() {
-    return this.database.getTracks();
+  async findAll(): Promise<Track[]> {
+    return await this.prisma.track.findMany();
   }
 
-  findOne(id: string) {
+  async findOne(id: string): Promise<Track> {
     if (!validate(id)) throw new BadRequestException('Invalid trackId');
 
-    const track = this.database.getTrackById(id);
+    const track = await this.prisma.track.findUnique({ where: { id } });
     if (!track) throw new NotFoundException('Track not found');
     return track;
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
-    const track = this.findOne(id);
-    const updatedTrack = {
-      ...track,
-      name: updateTrackDto.name,
-      duration: updateTrackDto.duration,
-      artistId: updateTrackDto.artistId,
-      albumId: updateTrackDto.albumId,
-    };
-    this.database.getTracks().map((track) => {
-      return track.id === id ? updatedTrack : track;
+  async update(id: string, updateTrackDto: UpdateTrackDto): Promise<Track> {
+    const track = await this.findOne(id);
+    const updatedTrack = await this.prisma.track.update({
+      where: { id: track.id },
+      data: updateTrackDto,
     });
 
     return updatedTrack;
   }
 
-  remove(id: string) {
-    const track = this.findOne(id);
-    return this.database.deleteTrack(track.id);
+  async remove(id: string): Promise<void> {
+    const trackToDelete = await this.findOne(id);
+    await this.prisma.track.delete({ where: { id: trackToDelete.id } });
   }
 }
