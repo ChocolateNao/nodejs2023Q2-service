@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  login     String
+  password  String
+  version   Int      @default(1)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Artist {
+  id     String  @id @default(uuid())
+  name   String
+  grammy Boolean @default(false)
+
+  favorites   Favs?   @relation(fields: [favoritesId], references: [id], onDelete: SetNull)
+  favoritesId String? @map("favorites_id")
+  albums      Album[]
+  tracks      Track[]
+
+  @@map("artists")
+}
+
+model Track {
+  id       String  @id @default(uuid())
+  name     String  @db.VarChar(255)
+  artistId String? @unique @map("artist_id")
+  albumId  String? @unique @map("album_id")
+  duration Int
+
+  favorites   Favs?   @relation(fields: [favoritesId], references: [id], onDelete: SetNull)
+  favoritesId String? @map("favorites_id")
+  artist      Artist? @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  album       Album?  @relation(fields: [albumId], references: [id], onDelete: SetNull)
+
+  @@map("tracks")
+}
+
+model Album {
+  id       String  @id @default(uuid())
+  name     String  @db.VarChar(255)
+  year     Int
+  artistId String? @unique @map("artist_id")
+
+  favorites   Favs?   @relation(fields: [favoritesId], references: [id], onDelete: SetNull)
+  favoritesId String? @map("favorites_id")
+  artist      Artist? @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  tracks      Track[]
+
+  @@map("albums")
+}
+
+model Favs {
+  id      String   @id @default(uuid())
+  artists Artist[]
+  albums  Album[]
+  tracks  Track[]
+
+  @@map("favorites")
+}
