@@ -1,0 +1,24 @@
+# Git
+.git
+.gitignore
+
+# Build dirs
+node_modules
+dist
+npm-debug.log
+
+# Configs
+Dockerfile
+.dockerignore
+.eslintrc*
+.prettierrc*
+.vscode/
+
+# Test
+test/
+coverage/
+jest.config.json
+
+# Docs
+*.md
+LICENSE
