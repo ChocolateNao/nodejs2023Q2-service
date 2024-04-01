@@ -55,7 +55,7 @@ export class AuthService {
     };
   }
 
-  private async updateUserRefreshToken(userId: string, refreshToken: string) {
+  private async updateRefreshToken(userId: string, refreshToken: string) {
     const hashedRefreshToken = await this.hashData(refreshToken);
 
     await this.prisma.user.update({
@@ -73,18 +73,15 @@ export class AuthService {
         refreshToken: '',
       },
     });
-    console.log(user);
     return processUserRes(user);
   }
 
   async logIn(createAuthDto: CreateUserDto): Promise<Tokens> {
     const existingUser = await this.getUser(createAuthDto);
-    console.log(existingUser);
     const isPasswordMatch = await bcrypt.compare(
       createAuthDto.password,
       existingUser.password,
     );
-    console.log(isPasswordMatch);
     if (!existingUser || !isPasswordMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -94,37 +91,47 @@ export class AuthService {
       existingUser.login,
     );
 
-    await this.updateUserRefreshToken(existingUser.id, tokens.refreshToken);
+    await this.updateRefreshToken(existingUser.id, tokens.refreshToken);
     return tokens;
   }
 
   async refreshToken(refreshTokenDto: RefreshTokenDto) {
-    try {
-      const { refreshToken } = refreshTokenDto;
-      const { sub } = await this.jwtService.verifyAsync(refreshToken, {
-        secret: process.env.JWT_SECRET_REFRESH_KEY ?? '',
-      });
-      if (!sub)
-        throw new UnauthorizedException('No valid refresh token provided');
+    const { refreshToken } = refreshTokenDto;
+    const verifyToken = async () => {
+      try {
+        return await this.jwtService.verifyAsync(refreshToken, {
+          secret: process.env.JWT_SECRET_REFRESH_KEY ?? '',
+        });
+      } catch {
+        throw new ForbiddenException('Refresh token is invalid');
+      }
+    };
 
-      const user = await this.prisma.user.findUnique({
-        where: { id: sub },
-      });
-      if (!user) throw new ForbiddenException('Forbidden: no user was found');
+    const { sub, exp } = await verifyToken();
 
-      const isRefreshTokensMatch = await bcrypt.compare(
-        user.refreshToken,
-        refreshToken,
-      );
-      if (!isRefreshTokensMatch)
-        throw new ForbiddenException('Access token mismatch');
-
-      const tokens: Tokens = await this.getTokens(user.id, user.login);
-
-      await this.updateUserRefreshToken(user.id, tokens.refreshToken);
-      return tokens;
-    } catch (err) {
-      throw new ForbiddenException('Access denied');
+    if (exp < (new Date().getTime() + 1) / 1000) {
+      throw new ForbiddenException('Refresh token is expired');
     }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: sub },
+    });
+    if (!user)
+      throw new ForbiddenException(
+        'No user was found associated with this token',
+      );
+
+    const isRefreshTokensMatch = await bcrypt.compare(
+      refreshToken,
+      user.refreshToken,
+    );
+
+    if (!isRefreshTokensMatch)
+      throw new ForbiddenException('Refresh token mismatch');
+
+    const tokens: Tokens = await this.getTokens(user.id, user.login);
+
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    return tokens;
   }
 }
