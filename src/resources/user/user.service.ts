@@ -11,6 +11,7 @@ import { validate } from 'uuid';
 import { User } from './entities/user.entity';
 import { UserResponse } from './entities/user-res.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -32,7 +33,18 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserResponse> {
-    const user: User = await this.prisma.user.create({ data: createUserDto });
+    const saltRounds = +process.env.CRYPT_SALT ?? 1;
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      saltRounds,
+    );
+    const user: User = await this.prisma.user.create({
+      data: {
+        ...createUserDto,
+        password: hashedPassword,
+        refreshToken: '',
+      },
+    });
     return processUserRes(user);
   }
 
@@ -50,15 +62,33 @@ export class UserService {
     updatePasswordDto: UpdatePasswordDto,
   ): Promise<UserResponse> {
     const userFull = (await this.getUserByIdFull(id)) as User;
-    if (userFull.password !== updatePasswordDto.oldPassword)
-      throw new ForbiddenException('Passwords do not match');
+    if (
+      (await bcrypt.compare(
+        updatePasswordDto.oldPassword,
+        userFull.password,
+      )) === false
+    )
+      throw new ForbiddenException('Invalid old password');
 
-    if (userFull.password !== updatePasswordDto.newPassword) {
+    if (
+      (await bcrypt.compare(
+        updatePasswordDto.newPassword,
+        userFull.password,
+      )) === false
+    ) {
+      const saltRounds = +process.env.CRYPT_SALT ?? 1;
+      const updatedPassword = await bcrypt.hash(
+        updatePasswordDto.newPassword,
+        saltRounds,
+      );
+
       const updatedUser = await this.prisma.user.update({
         where: { id },
         data: {
-          password: updatePasswordDto.newPassword,
-          version: { increment: 1 },
+          password: updatedPassword,
+          version: {
+            increment: 1,
+          },
         },
       });
       return processUserRes(updatedUser);

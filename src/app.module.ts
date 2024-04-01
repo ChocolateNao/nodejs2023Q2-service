@@ -14,6 +14,8 @@ import { AuthModule } from './resources/auth/auth.module';
 import { CustomLoggerMiddleware } from './shared/middlewares/logger/logger.middleware';
 import { CustomLoggerModule } from './shared/middlewares/logger/logger.module';
 import { CustomExceptionFilterModule } from './shared/filters/exception-filter.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AccessTokenGuard } from './resources/auth/guards/access-token.guard';
 
 @Module({
   imports: [
@@ -26,6 +28,12 @@ import { CustomExceptionFilterModule } from './shared/filters/exception-filter.m
     AuthModule,
     CustomLoggerModule,
     CustomExceptionFilterModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
+    },
   ],
 })
 export class AppModule implements NestModule {
