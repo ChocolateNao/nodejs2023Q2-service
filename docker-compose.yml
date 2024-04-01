@@ -1,12 +1,14 @@
 version: '3.8'
 
+name: home-library-service
+
 services:
 
   # Node.js runtime
   app:
     build:
       context: .
-    container_name: app-container
+    container_name: app
     env_file:
       - .env
     environment:
@@ -16,9 +18,9 @@ services:
     networks:
       - custom-network
     volumes:
-      - ./src:/app/src
+      - ./src:/app/src:cached
       - node_modules:/app/node_modules
-    restart: always
+    restart: unless-stopped
     depends_on:
       - postgres
 
@@ -26,7 +28,7 @@ services:
   postgres:
     build:
       context: ./database
-    container_name: postgres-container
+    container_name: postgres
     env_file:
       - .env
     environment:
@@ -40,7 +42,7 @@ services:
     volumes:
       - postgres-db:/var/lib/postgresql/data
       - postgres-logs:/var/log/postgresql
-    restart: always
+    restart: unless-stopped
 
 networks:
   custom-network:
