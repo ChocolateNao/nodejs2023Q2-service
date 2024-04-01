@@ -92,8 +92,8 @@ export class AuthService {
     }
 
     const tokens: Tokens = await this.getTokens(
-      existingUser.id,
       existingUser.login,
+      existingUser.id,
     );
 
     await this.updateRefreshToken(existingUser.id, tokens.refreshToken);
@@ -113,16 +113,16 @@ export class AuthService {
       }
     };
 
-    const { sub, exp } = await verifyToken();
+    const { payload, exp } = await verifyToken();
 
     if (exp < (new Date().getTime() + 1) / 1000) {
       throw new ForbiddenException('Refresh token is expired');
     }
 
     let user: User;
-    if (sub) {
+    if (payload.login) {
       user = await this.prisma.user.findUnique({
-        where: { id: sub },
+        where: { id: payload.userId },
       });
     }
     if (!user)
@@ -138,7 +138,7 @@ export class AuthService {
     if (!isRefreshTokensMatch)
       throw new ForbiddenException('Refresh token mismatch');
 
-    const tokens: Tokens = await this.getTokens(user.id, user.login);
+    const tokens: Tokens = await this.getTokens(user.login, user.id);
 
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
