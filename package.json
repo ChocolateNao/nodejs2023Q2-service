@@ -21,7 +21,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "scan:app": "docker scout cves home-library-service-app"
+    "scan:app": "docker scout cves choconao/home-library-app"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.3",

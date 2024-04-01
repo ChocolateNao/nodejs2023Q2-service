@@ -6,6 +6,7 @@ services:
 
   # Node.js runtime
   app:
+    image: choconao/home-library-app
     build:
       context: .
     container_name: app
@@ -20,12 +21,14 @@ services:
     volumes:
       - ./src:/app/src:cached
       - node_modules:/app/node_modules
+      - app-logs:/var/log/app
     restart: unless-stopped
     depends_on:
       - postgres
 
   # PostgreSQL database
   postgres:
+    image: choconao/home-library-database
     build:
       context: ./database
     container_name: postgres
@@ -52,3 +55,4 @@ volumes:
   node_modules:
   postgres-db:
   postgres-logs:
+  app-logs:
