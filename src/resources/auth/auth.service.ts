@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserResponse } from '../user/entities/user-res.entity';
-import { PayloadToken, Tokens } from './interfaces/token.interface';
+import { TokenPayload, Tokens } from './interfaces/token.interface';
 import { User } from '@prisma/client';
 import { processUserRes } from 'src/utils/processUserRes';
 
@@ -33,7 +33,7 @@ export class AuthService {
   }
 
   private async getTokens(userId: string, login: string) {
-    const payload: PayloadToken = { sub: userId, login: login };
+    const payload: TokenPayload = { sub: userId, login: login };
     const jwtAccessTokenOptions = {
       secret: process.env.JWT_SECRET_KEY ?? '',
       expiresIn: process.env.TOKEN_EXPIRE_TIME ?? '',
