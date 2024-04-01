@@ -36,6 +36,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
       statusCode: status,
       path: req.url,
       description: message,
+      body: req.body,
     };
 
     if (status >= 200 && status < 300) {

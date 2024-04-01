@@ -39,7 +39,6 @@ export class AuthService {
 
   private async getTokens(login: string, userId: string) {
     const payload: TokenPayload = { login: login, userId: userId };
-    console.log(payload);
     const jwtAccessTokenOptions = {
       secret: process.env.JWT_SECRET_KEY ?? '',
       expiresIn: process.env.TOKEN_EXPIRE_TIME ?? '',
@@ -103,6 +102,7 @@ export class AuthService {
 
   async refreshToken(refreshTokenDto: RefreshTokenDto) {
     const { refreshToken } = refreshTokenDto;
+
     const verifyToken = async () => {
       try {
         return await this.jwtService.verifyAsync(refreshToken, {
@@ -119,9 +119,12 @@ export class AuthService {
       throw new ForbiddenException('Refresh token is expired');
     }
 
-    const user = await this.prisma.user.findUnique({
-      where: { id: sub },
-    });
+    let user: User;
+    if (sub) {
+      user = await this.prisma.user.findUnique({
+        where: { id: sub },
+      });
+    }
     if (!user)
       throw new ForbiddenException(
         'No user was found associated with this token',
