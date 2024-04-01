@@ -15,6 +15,11 @@ import { UserService } from '../user/user.service';
     RefreshTokenStrategy,
     UserService,
   ],
-  imports: [UserModule, JwtModule.register({})],
+  imports: [
+    UserModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET_KEY,
+    }),
+  ],
 })
 export class AuthModule {}

@@ -11,10 +11,10 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { PublicRoute } from 'src/decorators/public-route.decorator';
 import { JSON_HEADER_NAME, JSON_HEADER_VALUE } from 'src/constants/jsonHeader';
+import { AccessTokenGuard } from './guards/access-token.guard';
 
 @PublicRoute()
 @Controller('auth')
@@ -35,7 +35,7 @@ export class AuthController {
     return this.authService.logIn(loginUserDto);
   }
 
-  @UseGuards(RefreshTokenGuard)
+  @UseGuards(AccessTokenGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)

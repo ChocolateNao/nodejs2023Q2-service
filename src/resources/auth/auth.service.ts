@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -22,9 +23,13 @@ export class AuthService {
 
   private async getUser(data: CreateUserDto) {
     const { login } = data;
-    return await this.prisma.user.findFirst({
+    const user = await this.prisma.user.findFirst({
       where: { login },
     });
+    if (!user) {
+      throw new NotFoundException('User not found in the database');
+    }
+    return user;
   }
 
   private async hashData(data: string) {
@@ -32,8 +37,9 @@ export class AuthService {
     return await bcrypt.hash(data, saltRounds);
   }
 
-  private async getTokens(userId: string, login: string) {
-    const payload: TokenPayload = { sub: userId, login: login };
+  private async getTokens(login: string, userId: string) {
+    const payload: TokenPayload = { login: login, userId: userId };
+    console.log(payload);
     const jwtAccessTokenOptions = {
       secret: process.env.JWT_SECRET_KEY ?? '',
       expiresIn: process.env.TOKEN_EXPIRE_TIME ?? '',
@@ -44,14 +50,14 @@ export class AuthService {
     };
 
     return {
-      accessToken: await this.jwtService.signAsync(
+      accessToken: await this.jwtService.signAsync({
         payload,
         jwtAccessTokenOptions,
-      ),
-      refreshToken: await this.jwtService.signAsync(
+      }),
+      refreshToken: await this.jwtService.signAsync({
         payload,
         jwtRefreshTokenOptions,
-      ),
+      }),
     };
   }
 
