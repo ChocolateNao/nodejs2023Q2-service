@@ -7,10 +7,12 @@ import {
   Header,
   HttpCode,
   NotFoundException,
+  HttpStatus,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { JSON_HEADER_NAME, JSON_HEADER_VALUE } from 'src/constants/jsonHeader';
-import { isValidFavEntity } from 'src/utils/isValidFavEntity';
+import { isValidFavEntity, validFavEntities } from 'src/utils/isValidFavEntity';
+import { FavEntity } from 'src/types/favEntity.type';
 
 @Controller('favs')
 export class FavsController {
@@ -18,14 +20,11 @@ export class FavsController {
 
   @Post(':entity/:id')
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)
-  @HttpCode(201)
-  create(
-    @Param('entity') entity: 'track' | 'album' | 'artist',
-    @Param('id') id: string,
-  ) {
+  @HttpCode(HttpStatus.CREATED)
+  create(@Param('entity') entity: FavEntity, @Param('id') id: string) {
     if (!isValidFavEntity(entity)) {
       throw new NotFoundException(
-        "Unknown entity. Only 'track', 'album', 'artist' are allowed",
+        `Unknown entity. Only ${validFavEntities.join(', ')} are allowed`,
       );
     }
     return this.favsService.createFav(entity, id);
@@ -39,14 +38,11 @@ export class FavsController {
 
   @Delete(':entity/:id')
   @Header(JSON_HEADER_NAME, JSON_HEADER_VALUE)
-  @HttpCode(204)
-  remove(
-    @Param('entity') entity: 'track' | 'album' | 'artist',
-    @Param('id') id: string,
-  ) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('entity') entity: FavEntity, @Param('id') id: string) {
     if (!isValidFavEntity(entity)) {
       throw new NotFoundException(
-        "Unknown entity. Only 'track', 'album', 'artist' are allowed",
+        `Unknown entity. Only ${validFavEntities.join(', ')} are allowed`,
       );
     }
     return this.favsService.removeFav(entity, id);

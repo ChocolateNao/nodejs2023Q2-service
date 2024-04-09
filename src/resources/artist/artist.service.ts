@@ -5,58 +5,46 @@ import {
 } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { Database } from 'src/database/database';
 import { validate } from 'uuid';
+import { Artist } from './entities/artist.entity';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ArtistService {
-  constructor(private database: Database) {}
+  constructor(private prisma: PrismaService) {}
 
-  create(createArtistDto: CreateArtistDto) {
-    const newArtist = this.database.createArtist(createArtistDto);
+  async create(createArtistDto: CreateArtistDto): Promise<Artist> {
+    const newArtist = await this.prisma.artist.create({
+      data: createArtistDto,
+    });
     return newArtist;
   }
 
-  findAll() {
-    return this.database.getArtists();
+  async findAll(): Promise<Artist[]> {
+    return await this.prisma.artist.findMany();
   }
 
-  findOne(id: string) {
-    if (!validate(id)) throw new BadRequestException('Invalid albumId');
+  async findOne(id: string): Promise<Artist> {
+    if (!validate(id)) throw new BadRequestException('Invalid artistId');
 
-    const album = this.database.getArtistById(id);
-    if (!album) throw new NotFoundException('Album not found');
-    return album;
+    const artist = await this.prisma.artist.findUnique({ where: { id } });
+    if (!artist) throw new NotFoundException('Artist not found');
+    return artist;
   }
 
-  update(id: string, updateArtistDto: UpdateArtistDto) {
-    const artist = this.findOne(id);
+  async update(id: string, updateArtistDto: UpdateArtistDto): Promise<Artist> {
+    const artist = await this.findOne(id);
 
-    const updatedArtist = {
-      ...artist,
-      name: updateArtistDto.name,
-      grammy: updateArtistDto.grammy,
-    };
-
-    this.database.getArtists().map((artist) => {
-      return artist.id === id ? updatedArtist : artist;
+    const updatedArtist = await this.prisma.artist.update({
+      data: updateArtistDto,
+      where: { id: artist.id },
     });
+
     return updatedArtist;
   }
 
-  remove(id: string) {
-    const artist = this.findOne(id);
-
-    this.database.getTracks().map((track) => {
-      if (track.artistId === artist.id) track.artistId = null;
-      return track;
-    });
-
-    this.database.getAlbums().map((album) => {
-      if (album.artistId === artist.id) album.artistId = null;
-      return album;
-    });
-
-    return this.database.deleteArtist(artist.id);
+  async remove(id: string): Promise<void> {
+    const artistToDelete = await this.findOne(id);
+    await this.prisma.artist.delete({ where: { id: artistToDelete.id } });
   }
 }
