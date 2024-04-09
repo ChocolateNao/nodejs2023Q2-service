@@ -99,7 +99,7 @@ npm run scan:app
 
 ### The Traditional Way
 
-Before starting the apllication the traditional way, you have to unstall PostgreSQL locally on your machine. Then, you have to point the app to the database i.e edit `.env` `DATABASE_URL` variable. By default it's set to reach the containder's network.
+Before starting the apllication the traditional way, you have to unstall PostgreSQL locally on your machine. Then, you have to point the app to the database i.e edit `.env` `DATABASE_URL` variable from `postgres` to `localhost`. This way you will be able to also reach the database inside a container. By default it's set to reach the containder's network.
 
 ```bash
 # Generate SQL migration files
